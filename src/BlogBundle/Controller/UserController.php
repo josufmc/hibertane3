@@ -7,6 +7,8 @@ use Symfony\Component\HttpFoundation\Request;
 use BlogBundle\Entity\User;
 use BlogBundle\Form\UserType;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\Security\Core\Encoder\EncoderFactory;
+use Symfony\Component\Security\Core\Encoder\BCryptPasswordEncoder;
 
 class UserController extends Controller {
 
@@ -30,9 +32,13 @@ class UserController extends Controller {
                 $user->setName($form->get('name')->getData());
                 $user->setSurname($form->get('surname')->getData());
                 $user->setEmail($form->get('email')->getData());
-                $user->setPassword($form->get('password')->getData());
                 $user->setRole('ROLE_USER');
                 $user->setImagen(null);
+                
+                $factory = $this->get('security.encoder_factory');
+                $encoder = $factory->getEncoder($user);
+                $password = $encoder->encodePassword($form->get('password')->getData(), $user->getSalt());
+                $user->setPassword($password);
 
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($user);
