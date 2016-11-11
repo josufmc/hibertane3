@@ -11,7 +11,7 @@ logout:
     
 blog_homepage:
     path:     /
-    defaults: { _controller: BlogBundle:Default:index }
+    defaults: { _controller: BlogBundle:Entry:index }
     
 blog_add_tag:
     path:     /tags/add
@@ -40,4 +40,16 @@ blog_index_category:
 blog_delete_category:
     path:     /categories/delete/{id}
     defaults: { _controller: BlogBundle:Category:delete }
+    
+blog_add_entry:
+    path:     /entries/add
+    defaults: { _controller: BlogBundle:Entry:add }
+    
+blog_edit_entry:
+    path:     /entries/edit
+    defaults: { _controller: BlogBundle:Entry:edit }
+    
+blog_delete_entry:
+    path:     /entries/delete/{id}
+    defaults: { _controller: BlogBundle:Entry:delete }
     

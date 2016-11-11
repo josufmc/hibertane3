@@ -3,9 +3,11 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/xampp/htdocs/symfony3/src/BlogBundle/Resources/views/User/login.html.twig</file>
-            <file>file:/C:/xampp/htdocs/symfony3/src/BlogBundle/Controller/UserController.php</file>
-            <file>file:/C:/xampp/htdocs/symfony3/src/BlogBundle/Form/UserType.php</file>
+            <file>file:/C:/xampp/htdocs/symfony3/src/BlogBundle/Resources/views/Category/menu.categories.html.twig</file>
+            <file>file:/C:/xampp/htdocs/symfony3/src/BlogBundle/Entity/Entry.php</file>
+            <file>file:/C:/xampp/htdocs/symfony3/src/BlogBundle/Controller/EntryController.php</file>
+            <file>file:/C:/xampp/htdocs/symfony3/src/BlogBundle/Resources/config/routing.yml</file>
+            <file>file:/C:/xampp/htdocs/symfony3/src/BlogBundle/Resources/views/Entry/index.html.twig</file>
         </group>
     </open-files>
 </project-private>

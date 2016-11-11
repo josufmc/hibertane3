@@ -30,6 +30,11 @@ class Category
         $this->entry = new ArrayCollection();
     }
     
+    /* IMPORTANTE: Para los imprimir los formularios */
+    public function __toString(){
+        return $this->getName();
+    }
+    
     /**
      * Get id
      *
@@ -96,6 +101,8 @@ class Category
         $this->entry[] = $entry;
         return $this;
     }
+    
+    
 
 
 }
