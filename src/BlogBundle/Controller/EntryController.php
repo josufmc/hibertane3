@@ -70,23 +70,38 @@ class EntryController extends Controller {
         ));
     }
 
-    public function indexAction(Request $request) {
+    public function indexAction(Request $request, $page) {
         $em = $this->getDoctrine()->getManager();
         $categoryRepo = $em->getRepository('BlogBundle:Category');
         $categories = $categoryRepo->findAll();
         $entryRepo = $em->getRepository('BlogBundle:Entry');
-        $entries = $entryRepo->findAll();
+        //$entries = $entryRepo->findAll();
+        $pageSize = 5;
+        $entries = $entryRepo->getPaginatedEntries($pageSize, $page);
+        
+        $totalItems = count($entries);
+        $pagesCount = ceil($totalItems/$pageSize);
+        
         return $this->render('BlogBundle:Entry:index.html.twig', array(
                     'entries' => $entries,
-                    'categories' => $categories
+                    'categories' => $categories,
+                    'totalItems' => $totalItems,
+                    'pagesCount' => $pagesCount,
+                    'page' => $page
         ));
     }
 
     public function editAction(Request $request, $id) {
         $em = $this->getDoctrine()->getManager();
-        $repo = $em->getRepository('BlogBundle:Entry');
-        $entry = $repo->find($id);
-
+        // Obtenemos el usuario de la sesión
+        $user = $this->getUser();
+        // Generamos los repositorios
+        $entryRepository = $em->getRepository('BlogBundle:Entry');
+        $categoryRepository = $em->getRepository('BlogBundle:Category');
+        $entryTagRepository = $em->getRepository('BlogBundle:EntryTag');
+        $entry = $entryRepository->find($id);
+        
+        // Comprobamos que exista
         $status = '';
         if ($entry == null) {
             $status = 'La entrada no se ha encontrado';
@@ -99,24 +114,54 @@ class EntryController extends Controller {
 
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
+                // Obtenemos el fichero y hacemos upload
+                $file = $form['image']->getData();
+                $ext = $file->guessExtension();
+                $file_name = time() . "." . $ext;
+                $file->move("uploads", $file_name);
+                // Añadimos la imagen
+                $entry->setImage($file_name);
+
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($entry);
                 $flush = $em->flush();
+
+                // Regeneramos las entrytags
+                $entryTags = $entryTagRepository->findBy(array('entry' => $entry));
+                foreach ($entryTags as $entryTag) {
+                    if (is_object($entryTag)) {
+                        $em->remove($entryTag);
+                        $em->flush();
+                    }
+                }
+                // Añadimos las entradas
+                $entryRepository->saveEntryTags(
+                        $form->get('tags')->getData(), $form->get('title')->getData(), $entry->getCategory(), $user
+                );
 
                 if ($flush == null) {
                     $status = 'La entrada se ha editado correctamente';
                 } else {
                     $status = 'La entrada no se ha podido editar';
                 }
+
             } else {
                 $status = 'La entrada no se ha creado';
             }
             $this->session->getFlashBag()->add('status', $status);
             //return $this->redirectToRoute("blog_index_entry");
         }
-
+        
+        // Obtenemos las entrytags separadas por comas
+        $tags = "";
+        foreach ($entry->getEntryTag() as $entryTag) {
+            $tags .= $entryTag->getTag()->getName() . ', ';
+        }
+        
         return $this->render('BlogBundle:Entry:edit.html.twig', array(
-                    'form' => $form->createView()
+                    'form' => $form->createView(),
+                    'entry' => $entry,
+                    'tags' => $tags
         ));
     }
 
@@ -131,8 +176,8 @@ class EntryController extends Controller {
             $status = 'La entrada no se ha encontrado';
         } else {
             $entryTag = $entry->getEntryTag();
-            if ($entryTag){
-                foreach($entryTag as $et){
+            if ($entryTag) {
+                foreach ($entryTag as $et) {
                     $em->remove($et);
                     $em->flush();
                 }

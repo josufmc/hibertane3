@@ -1,11 +1,17 @@
 {% extends "BlogBundle::layout.html.twig" %}
 {% block content %}          
     <div class="col-lg-4">
-        <h2>Editar categoría</h2>
+        <h2>Editar la entrada {{entry.title}}</h2>
         {% for message in app.session.flashbag().get('status') %}
             <div class="alert alert-info">{{message}}</div>
         {% endfor %}
         {{ form_start(form, {'action':'', 'method':'post'}) }}
+            <label>Imagen:</label>    
+            <img src="{{asset("uploads/" ~ entry.image)}}" width="200">    
+            {{form_widget(form.image)}}
+            <label>Etiquetas:</label>  
+            {% set tags_clean = tags|trim(", ") %}
+            {{form_widget(form.tags, {'value':tags_clean} )}}
         {{ form_end(form) }}
     </div>
     <div class="clearfix"></div>

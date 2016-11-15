@@ -30,7 +30,7 @@ class EntryType extends AbstractType {
                         'Privado' => 'private',
             )))
                 ->add('image', FileType::class, array('label' => 'Imagen',
-                    'attr' => array('class' => '')))
+                    'attr' => array('class' => ''), 'data_class' => null))
                 ->add('category', EntityType::class, array(
                     'required' => 'required',
                     'label' => 'Categorías',

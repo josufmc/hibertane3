@@ -10,8 +10,8 @@ logout:
     defaults: { _controller: BlogBundle:User:logout }
     
 blog_homepage:
-    path:     /
-    defaults: { _controller: BlogBundle:Entry:index }
+    path:     /{page}
+    defaults: { _controller: BlogBundle:Entry:index, page:1 }
     
 blog_add_tag:
     path:     /tags/add
@@ -46,7 +46,7 @@ blog_add_entry:
     defaults: { _controller: BlogBundle:Entry:add }
     
 blog_edit_entry:
-    path:     /entries/edit
+    path:     /entries/edit/{id}
     defaults: { _controller: BlogBundle:Entry:edit }
     
 blog_delete_entry:

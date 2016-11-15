@@ -28,7 +28,7 @@
                     <tr>
                         <td>
                             {% if entry.image | length > 0 %}
-                            <img src="{{asset("uploads/" ~ entry.image)}}" width="200">
+                                <img src="{{asset("uploads/" ~ entry.image)}}" width="200">
                             {% endif %}
                         </td>
                         <td><strong>{{entry.title}}</strong></td>
@@ -55,4 +55,17 @@
         </table>
     </div>
     <div class="clearfix"></div>
+    <ul class="pagination">
+        {% if (page > 1)%}
+            <li><a href="{{path('blog_homepage', {page:page-1})}}">&laquo;</a></li>
+        {% endif %}
+        {% for i in 1..pagesCount%}
+            <li><a href="{{path('blog_homepage', {page:i})}}">{{i}}</a></li>
+        {% endfor %}
+        {% if (page < pagesCount)%}
+            <li><a href="{{path('blog_homepage', {page:page+1})}}">&raquo;</a></li>
+        {% endif %}
+    </ul>
 {% endblock %}
+
+
