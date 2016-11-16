@@ -85,9 +85,9 @@ class CategoryController extends Controller {
             $this->session->getFlashBag()->add('status', $status);
             //return $this->redirectToRoute("blog_index_category");
         }
-        
+
         return $this->render('BlogBundle:Category:edit.html.twig', array(
-            'form' => $form->createView()
+                    'form' => $form->createView()
         ));
     }
 
@@ -108,6 +108,29 @@ class CategoryController extends Controller {
         }
         $this->session->getFlashBag()->add('status', $status);
         return $this->redirectToRoute("blog_index_category");
+    }
+
+    function categoryAction($id, $page) {
+        $em = $this->getDoctrine()->getManager();
+        $categoryRepo = $em->getRepository('BlogBundle:Category');
+        $entryRepo = $em->getRepository('BlogBundle:Entry');
+
+        $category = $categoryRepo->find($id);
+        $categories = $categoryRepo->findAll();
+
+        $pageSize = 2;
+        $entries = $entryRepo->getCategoryEntries($category, $pageSize, $page);
+        $totalItems = count($entries);
+        $pagesCount = ceil($totalItems / $pageSize);
+
+        return $this->render('BlogBundle:Category:category.html.twig', array(
+                    'category' => $category,
+                    'categories' => $categories,
+                    'entries' => $entries,
+                    'totalItems' => $totalItems,
+                    'pagesCount' => $pagesCount,
+                    'page' => $page,
+        ));
     }
 
 }

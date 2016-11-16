@@ -31,9 +31,12 @@ class EntryController extends Controller {
                 $user = $this->getUser();
                 // Obtenemos el fichero y hacemos upload
                 $file = $form['image']->getData();
-                $ext = $file->guessExtension();
-                $file_name = time() . "." . $ext;
-                $file->move("uploads", $file_name);
+                $file_name = null;
+                if (!empty($file) && $file !=null){
+                    $ext = $file->guessExtension();
+                    $file_name = time() . "." . $ext;
+                    $file->move("uploads", $file_name);
+                }
 
                 // Manual
                 $entry->setTitle($form->get('title')->getData());
@@ -100,6 +103,7 @@ class EntryController extends Controller {
         $categoryRepository = $em->getRepository('BlogBundle:Category');
         $entryTagRepository = $em->getRepository('BlogBundle:EntryTag');
         $entry = $entryRepository->find($id);
+        $entryImage = $entry->getImage();
         
         // Comprobamos que exista
         $status = '';
@@ -116,9 +120,14 @@ class EntryController extends Controller {
             if ($form->isValid()) {
                 // Obtenemos el fichero y hacemos upload
                 $file = $form['image']->getData();
-                $ext = $file->guessExtension();
-                $file_name = time() . "." . $ext;
-                $file->move("uploads", $file_name);
+                $file_name = null;
+                if (!empty($file) && $file !=null){
+                    $ext = $file->guessExtension();
+                    $file_name = time() . "." . $ext;
+                    $file->move("uploads", $file_name);
+                } else {
+                    $file_name = $entryImage;
+                }
                 // Añadimos la imagen
                 $entry->setImage($file_name);
 

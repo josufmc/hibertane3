@@ -10,8 +10,10 @@ logout:
     defaults: { _controller: BlogBundle:User:logout }
     
 blog_homepage:
-    path:     /{page}
+    path:     /home/{page}
     defaults: { _controller: BlogBundle:Entry:index, page:1 }
+    requirements:
+        page: "[0-9]*"
     
 blog_add_tag:
     path:     /tags/add
@@ -33,6 +35,10 @@ blog_edit_category:
     path:     /categories/edit/{id}
     defaults: { _controller: BlogBundle:Category:edit }
     
+blog_read_category:
+    path:     /category/{id}/{page}
+    defaults: { _controller: BlogBundle:Category:category, page:1}
+    
 blog_index_category:
     path:     /categories
     defaults: { _controller: BlogBundle:Category:index }
@@ -52,4 +58,8 @@ blog_edit_entry:
 blog_delete_entry:
     path:     /entries/delete/{id}
     defaults: { _controller: BlogBundle:Entry:delete }
+    
+blog_lang:
+    path:     /lang/{_locale}
+    defaults: { _controller: BlogBundle:Default:lang }
     

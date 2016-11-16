@@ -6,10 +6,10 @@
     {% for message in app.session.flashbag().get('status') %}
         <div class="alert alert-info">{{message}}</div>
     {% endfor %}
-    <div class="col-lg-10">
-        <h2>Listado de entradas</h2>
+    <div class="col-lg-6">
+        <h2>Listado de entradas de categoría: {{category.name}}</h2>
         <hr>
-        <a href="{{path("blog_add_entry")}}" class="btn btn-success">Añadir entrada</a>
+        <a href="{{path("blog_add_category")}}" class="btn btn-success">Añadir categoría</a>
         <br><br>
         <table class="table table-bordered">
             <thead>
@@ -39,7 +39,7 @@
                                 {{et.getTag().getName()}} 
                             {% endfor %}
                         </td>
-                        <td><a href="{{path("blog_edit_entry", {'id':entry.id})}}" class="btn btn-success">{% trans %}btn_edit{% endtrans %}</a></td>
+                        <td><a href="{{path("blog_edit_entry", {'id':entry.id})}}" class="btn btn-success">Editar</a></td>
                         <td>
                             {% if (app.user.id is defined) and (entry.user.id == app.user.id) %}
                                 {% if entry.getEntryTag() | length == 0 %}
@@ -57,15 +57,13 @@
     <div class="clearfix"></div>
     <ul class="pagination">
         {% if (page > 1)%}
-            <li><a href="{{path('blog_homepage', {page:page-1})}}">&laquo;</a></li>
+            <li><a href="{{path('blog_read_category', {"id":category.id, "page":page-1})}}">&laquo;</a></li>
         {% endif %}
         {% for i in 1..pagesCount%}
-            <li><a href="{{path('blog_homepage', {page:i})}}">{{i}}</a></li>
+            <li><a href="{{path('blog_read_category', {"id":category.id, "page":i})}}">{{i}}</a></li>
         {% endfor %}
         {% if (page < pagesCount)%}
-            <li><a href="{{path('blog_homepage', {page:page+1})}}">&raquo;</a></li>
+            <li><a href="{{path('blog_read_category', {"id":category.id, "page":page+1})}}">&raquo;</a></li>
         {% endif %}
     </ul>
 {% endblock %}
-
-
